@@ -15,6 +15,7 @@ public class QueryRecorder {
 
     // probably replaces this with a database eventually
     private static HashMap<String, HashMap<String, Object>> all = new HashMap<String, HashMap<String, Object>>();
+    private final static Integer max_record_size = 1024 * 8;
 
     public synchronized void record(String query, Double duration, HashMap<String, Object> parameters) {
         if (all.containsKey(query)) {
@@ -30,13 +31,37 @@ public class QueryRecorder {
         }
     }
 
-    void printResults(PrintStream out) {
+    void printByTotal(PrintStream out) {
         for (String key : all.keySet()) {
-            Integer max = 400;
-            if (key.length() < max){
+            Integer max = max_record_size;
+            if (key.length() < max) {
                 max = key.length();
             }
-            out.println(all.get(key).get("count").toString() + " times query: " + key.substring(0, max));
+            out.println(all.get(key).get("count").toString() + "\t" + key.substring(0, max));
+            out.flush();
+        }
+    }
+
+    void printByAggregateRunTime(PrintStream out) {
+        for (String key : all.keySet()) {
+
+            Integer max = max_record_size;
+            if (key.length() < max) {
+                max = key.length();
+            }
+            out.println(all.get(key).get("duration").toString() + "\t" + key.substring(0, max));
+            out.flush();
+        }
+    }
+
+    void printByAverageRunTime(PrintStream out) {
+        for (String key : all.keySet()) {
+
+            Integer max = max_record_size;
+            if (key.length() < max) {
+                max = key.length();
+            }
+            out.println(((Double) all.get(key).get("duration")) / ((Integer) all.get(key).get("count")) + "\t" + all.get(key).get("count") + "\t" + key.substring(0, max));
             out.flush();
         }
     }

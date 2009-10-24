@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import java.io.PrintStream;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -53,8 +54,12 @@ public class Main {
 
         executor.shutdown();
         executor.awaitTermination(20, TimeUnit.SECONDS);
-        recorder.printResults(System.out);
-
+        File total = new File("total.txt");
+        File agg = new File("aggregate_time.txt");
+        File avg = new File("average_time.txt");
+        recorder.printByTotal(new PrintStream(total));
+        recorder.printByAggregateRunTime(new PrintStream(agg));
+        recorder.printByAverageRunTime(new PrintStream(avg));
 
         reader.close();
     }
