@@ -27,6 +27,10 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws FileNotFoundException, IOException, InterruptedException {
+        if (args.length < 1){
+            throw new RuntimeException("Missing input file argument!");
+        }
+
         String filename = args[0];
         File file = new File(filename);
 
@@ -54,6 +58,7 @@ public class Main {
 
         executor.shutdown();
         executor.awaitTermination(20, TimeUnit.SECONDS);
+        
         File total = new File("total.txt");
         File agg = new File("aggregate_time.txt");
         File avg = new File("average_time.txt");
